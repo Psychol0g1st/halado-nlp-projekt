@@ -1,0 +1,8 @@
+*.tar.gz
+*.zip
+*.csv
+document_parses/
+storage/
+.ipynb_checkpoints/
+.DS_Store
+changelog
