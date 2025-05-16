@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+llama-index
+llama-index-embeddings-huggingface
+llama-index-llms-huggingface
+bitsandbytes
+torch
+spacy
+sentence-transformers
+pandas
+numpy
+scikit-learn
+nltk
+matplotlib
+python-multipart # For FastAPI form data if needed, good to have

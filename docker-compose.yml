@@ -1,0 +1,36 @@
+services:
+  rag_app:
+    build: . # Build the image from the Dockerfile in the current directory
+    container_name: medical_rag_agent_service
+    ports:
+      - "8000:8000" # Map port 8000 on the host to port 8000 in the container
+    volumes:
+      # Mount the storage directory containing the vector index
+      # Replace ./storage with the actual path to your storage directory on the host if different
+      - ./storage:/app/storage:ro # Mount as read-only if the app only reads the index
+      # Mount the frontend directory to serve static files (if FastAPI serves it, or for dev)
+      # For a simple HTML file, it's easier to just test by opening index.html in browser
+      # and ensuring it points to localhost:8000/ask
+      # - ./frontend:/app/frontend 
+      
+      # Mount Hugging Face cache to persist downloaded models (optional but recommended)
+      # Create a directory e.g., ./huggingface_cache_volume on your host machine first
+      - ./huggingface_cache_volume:/app/huggingface_cache 
+    environment:
+      # Pass any necessary environment variables to your application
+      # e.g., HF_TOKEN if you use private models
+      - HF_HOME=/app/huggingface_cache # Ensure this matches Dockerfile
+      - TRANSFORMERS_CACHE=/app/huggingface_cache/transformers
+      - HF_DATASETS_CACHE=/app/huggingface_cache/datasets
+      - SENTENCE_TRANSFORMERS_HOME=/app/huggingface_cache/sentence_transformers
+    # deploy: # Uncomment and configure if you have a CUDA-enabled Docker setup
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1 # Request 1 GPU
+    #           capabilities: [gpu]
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+volumes:
+  huggingface_cache_volume: # Defines the named volume for HF cache persistence

@@ -6,3 +6,6 @@ storage/
 .ipynb_checkpoints/
 .DS_Store
 changelog
+/Raw/
+/huggingface_cache_volume/
+/text_data_chunks/
