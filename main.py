@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware  # <-- CORS middleware import
 from pydantic import BaseModel
-import agent as rag_agent_module # Assuming your agent file is named agent.py
+import agent as rag_agent_module
 import os
-from fastapi.staticfiles import StaticFiles # Import StaticFiles
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
 app = FastAPI(
@@ -11,30 +12,36 @@ app = FastAPI(
     version="0.1.0"
 )
 
+# Enable CORS for your React frontend
+origins = [
+    "http://localhost:3000",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # --- Agent Initialization ---
-# Ensure PERSIST_DIR is correct relative to where main.py is run, or use absolute paths.
-# If Dockerizing, this path will be inside the container.
-PERSIST_DIR_FASTAPI = "./storage" # Should match agent.py or be configured
+PERSIST_DIR_FASTAPI = "/home/xavier11/NLP/DataWork/storage"
 if not os.path.exists(PERSIST_DIR_FASTAPI) or not os.listdir(PERSIST_DIR_FASTAPI):
     print(f"WARNING: Index directory '{PERSIST_DIR_FASTAPI}' not found or is empty during FastAPI startup.")
-    print("The agent might fail to initialize. Ensure the 'storage' directory is correctly populated and accessible.")
-    # You could choose to raise an error here to prevent the app from starting without the index
-    # raise RuntimeError(f"Index directory '{PERSIST_DIR_FASTAPI}' is missing or empty. FastAPI app cannot start.")
-    agent_instance = None # Set to None if index is missing
+    agent_instance = None
 else:
     try:
         agent_instance = rag_agent_module.RAGAgent(persist_dir=PERSIST_DIR_FASTAPI)
     except Exception as e:
         print(f"Error initializing RAGAgent: {e}")
-        agent_instance = None # Set to None if initialization fails
-
+        agent_instance = None
 
 class QueryRequest(BaseModel):
     question: str
 
 class QueryResponse(BaseModel):
     answer: str
-    source_info: str = "Retrieved from knowledge base" # Placeholder for future source tracking
+    source_info: str = "Retrieved from knowledge base"
 
 @app.on_event("startup")
 async def startup_event():
@@ -44,7 +51,6 @@ async def startup_event():
         print("Startup: RAG Agent could not be initialized due to an error during setup.")
     else:
         print("Startup: RAG Agent initialized successfully.")
-
 
 @app.post("/ask", response_model=QueryResponse)
 async def ask_question(request: QueryRequest):
@@ -59,10 +65,9 @@ async def ask_question(request: QueryRequest):
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index():
-    frontend_dir = "frontend" # Relative to where main.py is
+    frontend_dir = "frontend"
     index_html_path = os.path.join(frontend_dir, "index.html")
     if not os.path.exists(index_html_path):
         return HTMLResponse(content="<html><body><h1>Frontend not found</h1><p>Ensure index.html is in the 'frontend' directory.</p></body></html>", status_code=404)
     with open(index_html_path) as f:
         return HTMLResponse(content=f.read())
-# To run this app: uvicorn main:app --reload

@@ -9,3 +9,4 @@ changelog
 /Raw/
 /huggingface_cache_volume/
 /text_data_chunks/
+frontend/node_modules/*

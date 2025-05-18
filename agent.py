@@ -119,7 +119,7 @@ class RAGAgent:
 if __name__ == "__main__":
     print("Testing RAGAgent...")
     try:
-        agent = RAGAgent()
+        agent = RAGAgent(persist_dir="../DataWork/storage")
 
         # Test query 1
         query1 = "Does smoking increase the risk of hospitalization for COVID-19 patients?"
