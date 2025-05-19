@@ -1,0 +1,245 @@
+/* Global base for chat app */
+.chatApp {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #0f0a1a 0%, #1a1030 100%);
+  color: #e2d4ff;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header section */
+.appHeader {
+  padding: 0.75rem 0;
+  background: rgba(26, 16, 48, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(103, 58, 183, 0.3);
+  text-align: center;
+}
+
+.appHeader h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #b388ff 0%, #9c27b0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+}
+
+.appHeader h1 span {
+  font-weight: 300;
+  opacity: 0.9;
+}
+
+/* Main container */
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  height: calc(100vh - 48px);
+  overflow: hidden;
+}
+
+/* Message area */
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 0.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: #673ab7 #1a1030;
+}
+
+.messagesContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messagesContainer::-webkit-scrollbar-track {
+  background: #1a1030;
+}
+
+.messagesContainer::-webkit-scrollbar-thumb {
+  background-color: #673ab7;
+  border-radius: 3px;
+}
+
+/* Message wrapper */
+.messageWrapper {
+  width: 100%;
+  display: flex;
+  padding: 0.25rem 0;
+}
+
+.userWrapper {
+  justify-content: flex-end;
+}
+
+.messageContainer {
+  max-width: 75%;
+  padding: 0 0.5rem;
+}
+
+/* Message bubble */
+.message {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.messageContent {
+  padding: 0.5rem 0.9rem;
+  border-radius: 1.2rem;
+  line-height: 1.4;
+  font-size: 0.85rem;
+  border: 1px solid rgba(103, 58, 183, 0.3);
+  word-wrap: break-word;
+  display: inline-block;
+  text-align: left; /* Default text alignment */
+}
+
+.botMessage .messageContent {
+  background: rgba(103, 58, 183, 0.12);
+  color: #e2d4ff;
+  backdrop-filter: blur(6px);
+  border-bottom-left-radius: 0.25rem;
+}
+
+.userMessage .messageContent {
+  background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+  text-align: right; /* Align user message text to the right */
+}
+
+/* Input section */
+.inputContainer {
+  padding: 0.75rem;
+  background: rgba(26, 16, 48, 0.85);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(103, 58, 183, 0.3);
+}
+
+.inputForm {
+  display: flex;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.inputField {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(103, 58, 183, 0.3);
+  background: rgba(103, 58, 183, 0.1);
+  color: #e2d4ff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s ease;
+  resize: none;
+  overflow: hidden;
+  min-height: 40px;
+  max-height: 150px;
+}
+
+.inputField:focus {
+  border-color: #9c27b0;
+  background: rgba(103, 58, 183, 0.2);
+  box-shadow: 0 0 0 2px rgba(156, 39, 176, 0.2);
+}
+
+.inputField::placeholder {
+  color: rgba(226, 212, 255, 0.5);
+}
+
+/* Send button */
+.sendButton {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #b388ff;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sendButton:not(:disabled):hover {
+  color: #e2d4ff;
+}
+
+/* Typing dots animation */
+.typingIndicator {
+  display: flex;
+  padding: 0.5rem 1rem;
+}
+
+.dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: #b388ff;
+  margin: 0 0.2rem;
+  animation: bounce 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-6px);
+  }
+}
+
+.scrollAnchor {
+  height: 1px;
+  width: 100%;
+}
+
+/* Disclaimer */
+.disclaimer {
+  text-align: center;
+  margin-top: 0.4rem;
+  font-size: 0.65rem;
+  color: rgba(226, 212, 255, 0.6);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .appHeader h1 {
+    font-size: 1rem;
+  }
+
+  .inputField {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .messageContent {
+    font-size: 0.8rem;
+  }
+
+  .sendButton svg {
+    width: 20px;
+    height: 20px;
+  }
+}
