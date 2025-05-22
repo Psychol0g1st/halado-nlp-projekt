@@ -3,6 +3,7 @@
 *.csv
 document_parses/
 storage/
+storage2/
 .ipynb_checkpoints/
 .DS_Store
 changelog
@@ -10,3 +11,4 @@ changelog
 /huggingface_cache_volume/
 /text_data_chunks/
 frontend/node_modules/*
+/papers_txt/
