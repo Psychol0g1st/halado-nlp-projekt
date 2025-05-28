@@ -13,3 +13,4 @@ changelog
 frontend/node_modules/*
 /papers_txt/
 nlp_env
+wheelhouse/

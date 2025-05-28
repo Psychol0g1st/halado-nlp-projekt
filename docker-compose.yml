@@ -7,7 +7,7 @@ services:
     volumes:
       # Mount the storage directory containing the vector index
       # Replace ./storage with the actual path to your storage directory on the host if different
-      - ./storage:/app/storage:ro # Mount as read-only if the app only reads the index
+      - ./storage2:/app/storage:ro # Mount as read-only if the app only reads the index
       # Mount the frontend directory to serve static files (if FastAPI serves it, or for dev)
       # For a simple HTML file, it's easier to just test by opening index.html in browser
       # and ensuring it points to localhost:8000/ask
@@ -32,5 +32,15 @@ services:
     #           capabilities: [gpu]
     command: uvicorn main:app --host 0.0.0.0 --port 8000
 
+  # frontend app react based with own dockerfile
+  frontend_app:
+    build:
+      context: ./frontend # Path to the frontend Dockerfile
+      dockerfile: Dockerfile # Specify the Dockerfile if not named 'Dockerfile'
+    container_name: medical_rag_frontend_service
+    ports:
+      - "3000:80" # Map port 3000 on the host to port 3000 in the container
+    depends_on:
+      - rag_app # Ensure the backend service is started before the frontend
 volumes:
   huggingface_cache_volume: # Defines the named volume for HF cache persistence

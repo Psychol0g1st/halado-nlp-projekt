@@ -15,6 +15,7 @@ app = FastAPI(
 # Enable CORS for your React frontend
 origins = [
     "http://localhost:3000",
+    "http://medical_rag_frontend_service:3000",
     "http://localhost:5173",
 ]
 app.add_middleware(
@@ -26,7 +27,7 @@ app.add_middleware(
 )
 
 # --- Agent Initialization ---
-PERSIST_DIR_FASTAPI = "/home/xavier11/NLP/halado-nlp-projekt/storage"
+PERSIST_DIR_FASTAPI = "./storage"
 if not os.path.exists(PERSIST_DIR_FASTAPI) or not os.listdir(PERSIST_DIR_FASTAPI):
     print(f"WARNING: Index directory '{PERSIST_DIR_FASTAPI}' not found or is empty during FastAPI startup.")
     agent_instance = None

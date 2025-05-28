@@ -9,6 +9,8 @@ WORKDIR /app
 #     build-essential \
 #  && rm -rf /var/lib/apt/lists/*
 
+COPY wheelhouse /wheelhouse
+
 # Copy the requirements file into the container
 COPY requirements.txt .
 
@@ -16,7 +18,7 @@ COPY requirements.txt .
 # Using --no-cache-dir to reduce image size
 # Consider pre-downloading models here if they are large and static,
 # or use a volume for Hugging Face cache.
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --find-links=/wheelhouse -r requirements.txt
 
 # Download spaCy model
 RUN python -m spacy download en_core_web_lg

@@ -32,16 +32,6 @@ class RAGAgent:
 
     def _setup_llm(self):
         print(f"Setting up LLM: {self.model_name_llm} on device: {self.device}")
-        # Adjust quantization_config as needed, or remove if not using bitsandbytes
-        # For TinyLlama, quantization might not be strictly necessary or supported in the same way as larger models.
-        # If using a larger model like Llama-2-7b, bitsandbytes config would be more relevant.
-        # Example for larger models (ensure bitsandbytes is correctly installed and compatible):
-        # bnb_config = BitsAndBytesConfig(
-        #     load_in_4bit=True,
-        #     bnb_4bit_quant_type="nf4",
-        #     bnb_4bit_compute_dtype=torch.float16, # or torch.bfloat16
-        #     bnb_4bit_use_double_quant=False,
-        # )
 
         llm = HuggingFaceLLM(
             model_name=self.model_name_llm,
@@ -50,7 +40,7 @@ class RAGAgent:
             max_new_tokens=256,  # As per your notebook
             device_map="auto", # Automatically uses CUDA if available
             # model_kwargs={"quantization_config": bnb_config} # Enable if using bitsandbytes
-            generate_kwargs={"temperature": 0.7, "do_sample": True}, # Adjusted from notebook for potentially more factual
+            generate_kwargs={"temperature": 0.95, "do_sample": True}, # Adjusted from notebook for potentially more factual
         )
         Settings.llm = llm
         print("LLM setup complete.")
@@ -81,7 +71,8 @@ class RAGAgent:
             chat_mode="context", # Uses context from retrieved documents
             memory=memory,
             system_prompt=self.system_prompt,
-            # similarity_top_k=5 # You can adjust how many documents are retrieved
+            verbose=True,
+            similarity_top_k=5
         )
         print("Chat engine setup complete.")
         return chat_engine
@@ -111,15 +102,22 @@ class RAGAgent:
         # for token in response_stream.response_gen:
         #     full_response += token
         # return full_response
-
+        references = ""
         print(f"Agent response: {response.response}")
-        return response.response
+        if hasattr(response, 'source_nodes') and response.source_nodes:
+            references = "\n\nReferences:\n"
+            for i, node in enumerate(response.source_nodes):
+                # print(f"[{i+1}] {node.metadata.get('title', 'Unknown Title')}")
+                # print(node.get_content()[:300])  # Print first 300 chars of the node
+                references += f"[{i+1}] {node.metadata.get('title', 'Unknown Title')}\n"
+                references += f"{node.get_content()[:300]}...\n"  # Print first 300 chars of the node
 
+        return f"{response.response}{references}"
 # Example usage (for testing agent.py directly)
 if __name__ == "__main__":
     print("Testing RAGAgent...")
     try:
-        agent = RAGAgent(persist_dir="../DataWork/storage")
+        agent = RAGAgent(persist_dir=PERSIST_DIR)
 
         # Test query 1
         query1 = "Does smoking increase the risk of hospitalization for COVID-19 patients?"

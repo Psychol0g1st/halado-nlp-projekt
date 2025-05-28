@@ -33,8 +33,7 @@ export default function Chat() {
       });
 
       const data = await response.json();
-      const answer = data?.answer || "No response";
-
+      let answer = data?.answer || "No response";
       setMessages((prev) => [...prev, { sender: "bot", text: answer }]);
     } catch (err) {
       setMessages((prev) => [
@@ -80,7 +79,14 @@ export default function Chat() {
                       : styles.botMessage
                   }`}
                 >
-                  <div className={styles.messageContent}>{msg.text}</div>
+                  <div className={styles.messageContent}>
+                    {msg.text.split("\n").map((line, index) => (
+                      <span key={index}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
