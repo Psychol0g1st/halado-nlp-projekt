@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # --- Agent Initialization ---
-PERSIST_DIR_FASTAPI = "/home/xavier11/NLP/DataWork/storage"
+PERSIST_DIR_FASTAPI = "/home/xavier11/NLP/halado-nlp-projekt/storage"
 if not os.path.exists(PERSIST_DIR_FASTAPI) or not os.listdir(PERSIST_DIR_FASTAPI):
     print(f"WARNING: Index directory '{PERSIST_DIR_FASTAPI}' not found or is empty during FastAPI startup.")
     agent_instance = None

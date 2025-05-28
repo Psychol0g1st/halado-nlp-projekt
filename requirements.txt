@@ -11,5 +11,6 @@ pandas
 numpy
 scikit-learn
 nltk
+notebook
 matplotlib
 python-multipart # For FastAPI form data if needed, good to have

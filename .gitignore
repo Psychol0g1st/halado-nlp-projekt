@@ -12,3 +12,4 @@ changelog
 /text_data_chunks/
 frontend/node_modules/*
 /papers_txt/
+nlp_env
